@@ -1,7 +1,7 @@
-name = "convext-set-convergence-proof"
+name = "convex-set-convergence-proof"
 version = "0.1.0"
 keywords = ["math"]
-defaultTargets = ["ConvextSetConvergenceProof"]
+defaultTargets = ["ConvexSetConvergenceProof"]
 
 [leanOptions]
 pp.unicode.fun = true # pretty-prints `fun a ↦ b`
@@ -15,4 +15,5 @@ scope = "leanprover-community"
 rev = "v4.27.0-rc1"
 
 [[lean_lib]]
-name = "ConvextSetConvergenceProof"
+name = "ConvexSetConvergenceProof"
+roots = ["NestedConvexSetConvergence"]

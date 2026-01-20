@@ -40,7 +40,6 @@ lemma subset_of_succ_subset
   (h : ∀ n, C (n + 1) ⊆ C n)
   {a b : ℕ} (hab : a ≤ b) :
   C b ⊆ C a := by
-
   refine (Nat.le_induction (m := a) (P := fun n _hn => C n ⊆ C a) ?_ ?_ b hab)
   · intro x hx
     exact hx
