@@ -66,6 +66,75 @@ theorem convex_kuratowskiLimsup_of_succ_subset
     (hconv : ∀ n, Convex ℝ (C n)) :
     Convex ℝ (kuratowskiLimsup (X := X) C) := by
 
+  rw [convex_iff_add_mem]
+
+  intro x hx y hy a b ha hb hab
+
+  dsimp [kuratowskiLimsup] at hx
+
+  rcases hx with ⟨nx, hx⟩
+  rcases hx with ⟨hMonox, hx⟩
+  rcases hx with ⟨ck, hx⟩
+  rcases hx with ⟨hck_mem, hx⟩
+
+  dsimp [kuratowskiLimsup] at hy
+
+  rcases hy with ⟨ny, hy⟩
+  rcases hy with ⟨hMonoy, hy⟩
+  rcases hy with ⟨sk, hy⟩
+  rcases hy with ⟨hsk_mem, hy⟩
+
+  --At the n index level, we are constructing n_hat
+  set nhat : ℕ → ℕ := fun k => min (nx k) (ny k) with hnhat
+
+  dsimp [kuratowskiLimsup]
+  refine ⟨nhat, ?_⟩
+
+  constructor
+
+  · refine (strictMono_nat_of_lt_succ (α := ℕ) (f := nhat) ?_)
+    intro k
+    rw [hnhat]
+
+    by_cases hmin : nx k ≤ ny k
+    · --pos
+      simp [hmin]
+
+      constructor
+      · exact hMonox (Nat.lt_succ_self k)
+      · exact lt_of_le_of_lt (hmin) (hMonoy (Nat.lt_succ_self k))
+
+    · --neg
+      simp
+
+      constructor
+      left
+      exact hMonox (Nat.lt_succ_self k)
+      right
+      exact hMonoy (Nat.lt_succ_self k)
+
+  · set tk : ℕ → X := fun k => a • ck k + b • sk k with htk
+    refine ⟨tk, ?_⟩
+
+    constructor
+    · intro k
+      rw [htk]
+      have hanti : Antitone C := antitone_of_succ_subset (C := C) h
+      have hle_x : nhat k ≤ nx k := by
+        rw [hnhat]
+        exact min_le_left (nx k) (ny k)
+      have hck_hat : ck k ∈ C (nhat k) := (hanti hle_x) (hck_mem k)
+      have hle_y : nhat k ≤ ny k := by
+        rw [hnhat]
+        exact min_le_right (nx k) (ny k)
+      have hsk_hat : sk k ∈ C (nhat k) := (hanti hle_y) (hsk_mem k)
+
+      have hconvk : Convex ℝ (C (nhat k)) := hconv (nhat k)
+      have hadd := (convex_iff_add_mem).1 hconvk
+      exact hadd hck_hat hsk_hat ha hb hab
+    · --
+      sorry
+
   sorry
 
 end Main
